@@ -107,7 +107,7 @@ namespace StringLocalizationTester
                 majorFrame = majorFrame.Decompress(out var _);
             }
             var full = majorFrame.FindSubrecord(new RecordType(_lazySettings.Value.SubrecordType));
-            Console.WriteLine($"FULL record index: {full.AsUInt32()}");
+            Console.WriteLine($"{_lazySettings.Value.SubrecordType} record index: {full.AsUInt32()}");
 
             var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(
                 release,
