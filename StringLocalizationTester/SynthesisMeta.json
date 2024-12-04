@@ -1,0 +1,19 @@
+{
+  "Nickname": "",
+  "Visibility": "IncludeButHide",
+  "OneLineDescription": "Tests details about string localizations",
+  "LongDescription": "A patcher that does nothing, but will print details about a specific string localization to help debug issues",
+  "PreferredAutoVersioning": "Default",
+  "RequiredMods": [],
+  "TargetedReleases": [
+    "SkyrimLE",
+    "SkyrimSE",
+    "SkyrimVR",
+    "Fallout4",
+    "EnderalLE",
+    "EnderalSE",
+    "SkyrimSEGog",
+    "Starfield",
+    "Fallout4VR"
+  ]
+}
