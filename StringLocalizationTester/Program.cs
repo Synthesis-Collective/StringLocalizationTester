@@ -55,9 +55,14 @@ namespace StringLocalizationTester
 
         public static void RunPatchInternal(IPatcherState env, ILinkCache linkCache)
         {
+            if (!RecordType.TryFactory(_lazySettings.Value.SubrecordType, out var recType))
+            {
+                throw new ArgumentException("Need to set the SubrecordType in the settings to a 4 letter character: e.g. 'DESC'");
+            }
+
             if (!GetterTypeMapping.Instance.TryGetGetterType($"Mutagen.Bethesda.{env.GameRelease.ToCategory()}.{_lazySettings.Value.RecordTypeName}", out var targetType))
             {
-                Console.WriteLine($"Could not find target type for: {_lazySettings.Value.TargetRecord}");
+                Console.WriteLine($"Could not find target type for: {_lazySettings.Value.TargetRecord}.  Set the RecordTypeName in the settings to the name of the record type: e.g. 'Book', 'Weapon', etc");
                 return;
             }
             
@@ -67,6 +72,7 @@ namespace StringLocalizationTester
                 _lazySettings.Value.TargetRecord.FormKey,
                 env.GameRelease,
                 env.DataFolderPath,
+                recType,
                 targetType);
         }
 
@@ -75,6 +81,7 @@ namespace StringLocalizationTester
             FormKey formKey,
             GameRelease release,
             DirectoryPath dataPath,
+            RecordType recType,
             Type targetType)
         {
             var locs = RecordLocator.GetLocations(modPath, release, null);
@@ -106,7 +113,7 @@ namespace StringLocalizationTester
             {
                 majorFrame = majorFrame.Decompress(out var _);
             }
-            var full = majorFrame.FindSubrecord(new RecordType(_lazySettings.Value.SubrecordType));
+            var full = majorFrame.FindSubrecord(recType);
             Console.WriteLine($"{_lazySettings.Value.SubrecordType} record index: {full.AsUInt32()}");
 
             var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(
