@@ -32,14 +32,6 @@ namespace StringLocalizationTester
 
         public static void RunPatch(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
         {
-
-            foreach (var c in state.LoadOrder.PriorityOrder.Weapon().WinningContextOverrides())
-            {
-                if (c.Record.FormKey == _lazySettings.Value.TargetRecord.FormKey)
-                {
-                    Console.WriteLine($"TEST :{c.ModKey}");
-                }
-            }
             RunPatchInternal(state, state.LinkCache);
         }
 
@@ -55,6 +47,9 @@ namespace StringLocalizationTester
 
         public static void RunPatchInternal(IPatcherState env, ILinkCache linkCache)
         {
+            Console.WriteLine("=============== RUNNING TEST ===============");
+            Console.WriteLine($"Running on record {_lazySettings.Value.TargetRecord.FormKey} of type {_lazySettings.Value.TargetRecord} on subrecord {_lazySettings.Value.SubrecordType}");
+            
             if (!RecordType.TryFactory(_lazySettings.Value.SubrecordType, out var recType))
             {
                 throw new ArgumentException("Need to set the SubrecordType in the settings to a 4 letter character: e.g. 'DESC'");
@@ -95,7 +90,6 @@ namespace StringLocalizationTester
                 throw new ArgumentException("Command was given a record that was not Named");
             }
             
-            Console.WriteLine("=============== RUNNING TEST ===============");
             Console.WriteLine($"Analyzing from winning override path: {modPath}");
             Console.WriteLine($"Mutagen Name field returned: {named.Name}");
 
