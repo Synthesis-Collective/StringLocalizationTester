@@ -1,7 +1,14 @@
+using IniParser;
+using IniParser.Model.Configuration;
+using IniParser.Parser;
 using Mutagen.Bethesda;
+using Mutagen.Bethesda.Archives;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Synthesis;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Inis.DI;
+using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Aspects;
@@ -98,6 +105,38 @@ namespace StringLocalizationTester
                 Console.WriteLine("Mod was not localized.  String was embedded.");
                 return;
             }
+
+            var iniPathProvider = new IniPathProvider(
+                new GameReleaseInjection(release),
+                new IniPathLookup(
+                    new GameLocatorLookupCache()));
+            Console.WriteLine($"Ini Path: {iniPathProvider.Path}");
+            
+            // Release exists as parameter, in case future games need different handling
+            IniParserConfiguration iniConfig = new()
+            {
+                AllowDuplicateKeys = true,
+                AllowDuplicateSections = true,
+                AllowKeysWithoutSection = true,
+                AllowCreateSectionsOnFly = true,
+                CaseInsensitive = true,
+                SkipInvalidLines = true,
+            };
+            var parser = new FileIniDataParser(new IniDataParser(iniConfig));
+            var data = parser.ReadData(new StreamReader(File.OpenRead(iniPathProvider.Path)));
+            var basePath = data["Archive"];
+            Console.WriteLine("Ini [Archive] section:");
+            foreach (var x in basePath)
+            {
+                Console.WriteLine($"  {x.KeyName}: {x.Value}");
+            }
+            
+            var iniListings = Archive.GetIniListings(release);
+            Console.WriteLine("Ini Listings from API:");
+            foreach (var iniListing in iniListings)
+            {
+                Console.WriteLine($"  {iniListing}");
+            }
             
             using var stream = new MutagenBinaryReadStream(modPath, release, null);
             stream.Position = loc.Location.Min;
@@ -120,12 +159,15 @@ namespace StringLocalizationTester
                     out var str,
                     out var sourcePath))
             {
-                throw new ArgumentException($"Couldnt look up index {full.AsUInt32()}");
+                Console.WriteLine($"StringsOverlay lookup found:");
+                Console.WriteLine($"  {str}");
+                Console.WriteLine($"  {sourcePath}");
             }
-
-            Console.WriteLine($"StringsOverlay lookup found:");
-            Console.WriteLine($"  {str}");
-            Console.WriteLine($"  {sourcePath}");
+            else
+            {
+                Console.WriteLine($"Couldnt look up index {full.AsUInt32()}");
+            }
+            
         }
     }
 }

@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-      <PackageReference Include="Mutagen.Bethesda.Fallout4" Version="0.48" />
-      <PackageReference Include="Mutagen.Bethesda.Starfield" Version="0.48" />
-      <PackageReference Include="Mutagen.Bethesda.Skyrim" Version="0.48" />
+      <PackageReference Include="Mutagen.Bethesda.Fallout4" Version="0.48.1" />
+      <PackageReference Include="Mutagen.Bethesda.Starfield" Version="0.48.1" />
+      <PackageReference Include="Mutagen.Bethesda.Skyrim" Version="0.48.1" />
     <PackageReference Include="Mutagen.Bethesda.Synthesis" Version="0.32.1" />
   </ItemGroup>
 </Project>
