@@ -98,11 +98,12 @@ namespace StringLocalizationTester
             }
             
             Console.WriteLine($"Analyzing from winning override path: {modPath}");
+            Console.WriteLine($"Is mod localized? {mod.UsingLocalization}");
             Console.WriteLine($"Mutagen Name field returned: {named.Name}");
 
             if (!mod.UsingLocalization)
             {
-                Console.WriteLine("Mod was not localized.  String was embedded.");
+                Console.WriteLine("Mod was not localized.  String was embedded.  No further testing needed.");
                 return;
             }
 
