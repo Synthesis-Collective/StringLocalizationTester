@@ -158,45 +158,38 @@ namespace StringLocalizationTester
                 dataPath,
                 null);
 
-            if (!stringsOverlay.TryLookup(StringsSource.Normal, language, full.AsUInt32(), 
+            TryLookupAndPrint(stringsOverlay, StringsSource.Normal, language, full.AsUInt32());
+            TryLookupAndPrint(stringsOverlay, StringsSource.IL, language, full.AsUInt32());
+            TryLookupAndPrint(stringsOverlay, StringsSource.DL, language, full.AsUInt32());
+        }
+
+        private static void TryLookupAndPrint(
+            StringsFolderLookupOverlay stringsOverlay,
+            StringsSource stringsSource,
+            Language language,
+            uint index)
+        {
+            var fileType = stringsSource switch
+            {
+                StringsSource.Normal => ".strings",
+                StringsSource.IL => ".ilstrings",
+                StringsSource.DL => ".dlstrings",
+                _ => throw new ArgumentOutOfRangeException(nameof(stringsSource))
+            };
+
+            if (!stringsOverlay.TryLookup(stringsSource, language, index,
                     out var str,
                     out var sourcePath))
             {
-                Console.WriteLine($"StringsOverlay lookup found for .strings:");
+                Console.WriteLine($"StringsOverlay lookup found for {fileType}:");
                 Console.WriteLine($"  {str}");
                 Console.WriteLine($"  {sourcePath}");
             }
             else
             {
-                Console.WriteLine($"Couldn't look up index {full.AsUInt32()} in .strings");
+                Console.WriteLine($"Couldn't look up index {index} in {fileType}");
             }
-
-            if (!stringsOverlay.TryLookup(StringsSource.IL, language, full.AsUInt32(), 
-                    out str,
-                    out sourcePath))
-            {
-                Console.WriteLine($"StringsOverlay lookup found for .ilstrings:");
-                Console.WriteLine($"  {str}");
-                Console.WriteLine($"  {sourcePath}");
-            }
-            else
-            {
-                Console.WriteLine($"Couldn't look up index {full.AsUInt32()} in .ilstrings");
-            }
-
-            if (!stringsOverlay.TryLookup(StringsSource.DL, language, full.AsUInt32(), 
-                    out str,
-                    out sourcePath))
-            {
-                Console.WriteLine($"StringsOverlay lookup found for .dlstrings:");
-                Console.WriteLine($"  {str}");
-                Console.WriteLine($"  {sourcePath}");
-            }
-            else
-            {
-                Console.WriteLine($"Couldn't look up index {full.AsUInt32()} in .dlstrings");
-            }
-            
+            Console.WriteLine($"--------------------------------");
         }
     }
 }
