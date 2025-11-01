@@ -177,7 +177,7 @@ namespace StringLocalizationTester
                 _ => throw new ArgumentOutOfRangeException(nameof(stringsSource))
             };
 
-            if (!stringsOverlay.TryLookup(stringsSource, language, index,
+            if (stringsOverlay.TryLookup(stringsSource, language, index,
                     out var str,
                     out var sourcePath))
             {
